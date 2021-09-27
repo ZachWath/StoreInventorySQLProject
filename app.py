@@ -39,7 +39,12 @@ def add_csv():
 
 def app():
     app_running = True
-    
+    #v for viewing a single product in the database, if product doesnt exist , error should display
+    #   propmt to try again 
+    #a to add a new product , if this is a duplicate , the system overwrites the most recent data
+    #b for backing up the database , writted to a new csv file , should contain a single header line with
+    #   the proper fields 
+    #all user entries should be validated (check agains an options list)
 
 
 
