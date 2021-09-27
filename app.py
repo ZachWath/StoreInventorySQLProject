@@ -9,8 +9,6 @@ def clean_price(price_str):
     return int(price_float * 100)
 
 
-# def clean_quantity():
-
 
 def clean_date(date_str):
     split_date = date_str.split('/')
@@ -27,13 +25,15 @@ def add_csv():
         data = csv.reader(csvfile)
         next(data)
         for row in data:
-            product_name = row[0]
-            product_price = clean_price(row[1])
-            product_quantity = int(row[2])
-            product_date = clean_date(row[3])
-            new_product = Product(product_name=product_name, product_price=product_price,
-                                    product_quantity=product_quantity, date_updated=product_date)
-            session.add(new_product)
+            product_already_added = session.query(Product).filter(Product.product_name==row[0]).one_or_none()
+            if product_already_added == None:
+                product_name = row[0]
+                product_price = clean_price(row[1])
+                product_quantity = int(row[2])
+                product_date = clean_date(row[3])
+                new_product = Product(product_name=product_name, product_price=product_price,
+                                        product_quantity=product_quantity, date_updated=product_date)
+                session.add(new_product)
         session.commit()
 
 
