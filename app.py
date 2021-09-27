@@ -37,13 +37,42 @@ def add_csv():
         session.commit()
 
 
+def master_menu():
+    while True:
+        print('''
+            ***************WELCOME TO THE STORE INVENTORY MENU***************
+            \nPlease choose from the following options ..... 
+            \r
+            \rOPTIONS:
+            \rTo view a product's info in the inventory, press "v"...
+            \rTo add a new product to the inventory, press "a"...
+            \rTo create a backup of the current inventory database, press "b"...
+            \r ''')
+        possible_answers = ['v', 'a', 'b']
+        answer = input('What option would you like to do?...   ')
+        if answer.lower() in possible_answers:
+            return answer
+        else:
+            input('''That is not a valid option, please choose from the list provided...
+            \n Press ENTER to continue....''')
 def app():
     app_running = True
+    while app_running:
+        choice = master_menu()
+        if choice == 'v':
+            pass
     #v for viewing a single product in the database, if product doesnt exist , error should display
-    #   propmt to try again 
+    #   propmt to try again
+        elif choice == 'a':
     #a to add a new product , if this is a duplicate , the system overwrites the most recent data
+            pass
+
+        elif choice == 'b':
     #b for backing up the database , writted to a new csv file , should contain a single header line with
     #   the proper fields 
+            pass
+        else:
+            app_running = False
     #all user entries should be validated (check agains an options list)
 
 
@@ -54,6 +83,5 @@ def app():
 if __name__ == '__main__':
     Base.metadata.create_all (engine)
     add_csv()
-
-    for product in session.query(Product):
-        print(product)
+    app()
+    
