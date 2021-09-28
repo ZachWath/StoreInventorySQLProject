@@ -74,7 +74,8 @@ def view_product(user_input):
         return 
     else:
         if product_id in id_options:
-            print(session.query(Product).filter(product.product_id==product_id).first())
+            chosen_product = session.query(Product).filter(Product.product_id==product_id).first()
+            print(chosen_product)
             time.sleep(1.5)
             input('Press Enter to return to main menu....  ')
             return
@@ -94,6 +95,10 @@ def app():
     while app_running:
         choice = master_menu()
         if choice == 'v':
+            id_options = []
+            for product in session.query(Product):
+                id_options.append(product.product_id)
+            print(f'{id_options}')
             product_selection = input ('\n\nWhat product would you like to view? please only search by product Id #...  ')
             view_product(product_selection)
             pass
