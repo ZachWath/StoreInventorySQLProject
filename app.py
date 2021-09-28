@@ -55,11 +55,47 @@ def master_menu():
         else:
             input('''That is not a valid option, please choose from the list provided...
             \n Press ENTER to continue....''')
+
+
+def view_product(user_input):
+    id_options = []
+    for product in session.query(Product):
+        id_options.append(product.product_id)
+    try:
+        product_id = int(user_input)
+    except ValueError:
+        input ('''
+        \n!!!!!! ID ERROR !!!!!!
+        \r The Id should be in a number format
+        \r Ex: 1 
+        \r Press enter to return to menu and try again...
+        \r!!!!!!!!!!!!!!!!!!!!!!
+        ''')
+        return 
+    else:
+        if product_id in id_options:
+            print(session.query(Product).filter(product.product_id==product_id).first())
+            time.sleep(1.5)
+            input('Press Enter to return to main menu....  ')
+            return
+        else:
+            input(f'''
+            \n!!!!!! ID ERROR !!!!!!
+            \rThe ID you chose was unavailable.
+            \rPlease review the following list and try again.
+            \rOptions: {id_options}
+            \rPress enter to return to menu and try again.....  ''')
+            return 
+            
+
+
 def app():
     app_running = True
     while app_running:
         choice = master_menu()
         if choice == 'v':
+            product_selection = input ('\n\nWhat product would you like to view? please only search by product Id #...  ')
+            view_product(product_selection)
             pass
     #v for viewing a single product in the database, if product doesnt exist , error should display
     #   propmt to try again
