@@ -35,9 +35,12 @@ def add_csv():
                                         product_quantity=product_quantity, date_updated=product_date)
                 session.add(new_product)
             else:
-                product_already_added.product_price = clean_price(row[1])
-                product_already_added.product_quantity = int(row[2])
-                product_already_added.product_date = clean_date(row[3])
+                if product_already_added.product_date > clean_date(roq[3]):
+                    product_already_added.product_price = clean_price(row[1])
+                    product_already_added.product_quantity = int(row[2])
+                    product_already_added.product_date = clean_date(row[3])
+                else:
+                    pass
         session.commit()
 
 
