@@ -35,13 +35,13 @@ def add_csv():
                                         product_quantity=product_quantity, date_updated=product_date)
                 session.add(new_product)
             else:
-                if product_already_added.product_date > clean_date(roq[3]):
+                if product_already_added.date_updated < clean_date(row[3]):
                     product_already_added.product_price = clean_price(row[1])
                     product_already_added.product_quantity = int(row[2])
-                    product_already_added.product_date = clean_date(row[3])
+                    product_already_added.date_updated = clean_date(row[3])
                 else:
                     pass
-        session.commit()
+        session.commit() 
 
 
 def master_menu():
@@ -97,18 +97,16 @@ def view_product(user_input):
             
 def add_product():
     name = input ('What is the name of the product you would like to add?   ')
-    quantity =input (f'what is the quantity of {name}?   ')
-    price = int(input (f'What is the price of {name}?   '))
-    date = datetime.date(datetime.now())
-    date_string = date.strftime("%Y-%m-%d")
-    new_product = Product(product_name=name, product_quantity=quantity, date_updated= date, product_price= price)
-    print(new_product)
+    quantity =int(input (f'what is the quantity of {name}?   '))
+    price = clean_price((input (f'What is the price of {name}?   ')))
+    current_date = datetime.date.today()
+    new_product = Product(product_name=name, product_quantity=quantity, date_updated= current_date, product_price= price)
     if session.query(Product).filter(Product.product_name == new_product.product_name).count() > 0:
         existing_product = session.query(Product).filter(
-            Product.product_name == new_product.product_name)
-        existing_product.product_quantity = quantity
-        existing_product.product_price = price
-        existing_product.date_updated = date
+            Product.product_name == new_product.product_name).first()
+        existing_product.product_quantity = new_product.product_quantity
+        existing_product.product_price = new_product.product_price
+        existing_product.date_updated = new_product.date_updated
         session.commit()
         return
     else:
