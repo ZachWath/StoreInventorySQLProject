@@ -1,5 +1,6 @@
 from models import (Base, session, Product, engine)
 import datetime
+from datetime import datetime 
 import csv
 import time
 
@@ -88,6 +89,22 @@ def view_product(user_input):
             \rPress enter to return to menu and try again.....  ''')
             return 
             
+def add_product():
+    name = input ('What is the name of the product you would like to add?   ')
+    quantity =input (f'what is the quantity of {name}?   ')
+    price = int(input (f'What is the price of {name}?   '))
+    date = datetime.date(datetime.now())
+    date_string = date.strftime("%Y-%m-%d")
+    new_product = Product(product_name=name, product_quantity=quantity, date_updated= date, product_price= price)
+    print(new_product)
+    # session.add(new_product)
+    # session.commit()
+    # print('!!! YOUR PRODUCT HAS BEEN ADDED !!!')
+    # return
+
+
+
+
 
 
 def app():
@@ -101,14 +118,13 @@ def app():
             print(f'{id_options}')
             product_selection = input ('\n\nWhat product would you like to view? please only search by product Id #...  ')
             view_product(product_selection)
-            pass
-    #v for viewing a single product in the database, if product doesnt exist , error should display
-    #   propmt to try again
         elif choice == 'a':
+            add_product()
     #a to add a new product , if this is a duplicate , the system overwrites the most recent data
             pass
 
         elif choice == 'b':
+
     #b for backing up the database , writted to a new csv file , should contain a single header line with
     #   the proper fields 
             pass
