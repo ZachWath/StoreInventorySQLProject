@@ -97,10 +97,19 @@ def add_product():
     date_string = date.strftime("%Y-%m-%d")
     new_product = Product(product_name=name, product_quantity=quantity, date_updated= date, product_price= price)
     print(new_product)
-    # session.add(new_product)
-    # session.commit()
-    # print('!!! YOUR PRODUCT HAS BEEN ADDED !!!')
-    # return
+    if session.query(Product).filter(Product.product_name == new_product.product_name).count() > 0:
+        existing_product = session.query(Product).filter(
+            Product.product_name == new_product.product_name)
+        existing_product.product_quantity = quantity
+        existing_product.product_price = price
+        existing_product.date_updated = date
+        session.commit()
+        return
+    else:
+        session.add(new_product)
+        session.commit()
+        print('!!! YOUR PRODUCT HAS BEEN ADDED !!!')
+        return
 
 
 
