@@ -59,9 +59,9 @@ def add_csv():
 
 
 def add_product():
-    name = input('What is the name of the product you would like to add?   ')
-    quantity = clean_quantity(input(f'what is the quantity of {name}?   '))
-    price = clean_price((input(f'What is the price of {name}?   ')))
+    name = input('\nWhat is the name of the product you would like to add?\n~~~   ')
+    quantity = clean_quantity(input(f'\nwhat is the quantity of {name}?\n~~~   '))
+    price = clean_price((input(f'\nWhat is the price of {name}?\n~~~   ')))
     current_date = datetime.date.today()
     new_product = Product(product_name=name, product_quantity=quantity,
                         date_updated=current_date, product_price=price)
@@ -72,11 +72,14 @@ def add_product():
         existing_product.product_price = new_product.product_price
         existing_product.date_updated = new_product.date_updated
         session.commit()
+        print("\n\nYour product has been updated!!!\n\n")
+        time.sleep(1.5)
         return
     else:
         session.add(new_product)
         session.commit()
-        print('!!! YOUR PRODUCT HAS BEEN ADDED !!!')
+        print('\n\n!!! YOUR PRODUCT HAS BEEN ADDED !!!\n\n')
+        time.sleep(1.5)
         return
 
 
@@ -92,7 +95,7 @@ def view_product(user_input):
         \r The Id should be in a number format
         \r Ex: 1 
         \r Press enter to return to menu and try again...
-        \r!!!!!!!!!!!!!!!!!!!!!!
+        \r!!!!!!!!!!!!!!!!!!!!!!\n
         ''')
         return
     else:
@@ -101,7 +104,7 @@ def view_product(user_input):
                 Product.product_id == product_id).first()
             print(chosen_product)
             time.sleep(1.5)
-            input('Press Enter to return to main menu....  ')
+            input('\n\nPress Enter to return to main menu....\n  ')
             return
         else:
             input(f'''
@@ -109,7 +112,7 @@ def view_product(user_input):
             \rThe ID you chose was unavailable.
             \rPlease review the following list and try again.
             \rOptions: {id_options}
-            \rPress enter to return to menu and try again.....  ''')
+            \rPress enter to return to menu and try again.....\n  ''')
             return
 
 
@@ -139,7 +142,7 @@ def master_menu():
             \rTo create a backup of the current inventory database, press "b"...
             \rTo EXIT the program, press "e"...  ''')
         possible_answers = ['v', 'a', 'b','e']
-        answer = input('What option would you like to do?...   ')
+        answer = input('\n\nWhat option would you like to do?...\n~~~    ')
         if answer.lower() in possible_answers:
             return answer
         else:
@@ -157,13 +160,16 @@ def app():
                 id_options.append(product.product_id)
             print("\nThese are the available options...")
             print(f'\n{id_options}')
-            product_selection = input ('\n\nWhat product would you like to view? please only search by product Id #...  ')
+            product_selection = input ('\n\nWhat product would you like to view? please only search by product Id #...\n~~~ ')
             view_product(product_selection)
         elif choice == 'a':
             add_product()
             pass
         elif choice == 'b':
             backup()
+            print("\n\nYou have successfully created a backup titled 'inventory_backup.csv'!!!\n\n")
+            time.sleep(1.5)
+            input("Please press ENTER to return to the main menu...\n~~~")
             pass
         elif choice == 'e':
             print ("\nThank you for using this progam!")
