@@ -155,7 +155,8 @@ def app():
             id_options = []
             for product in session.query(Product):
                 id_options.append(product.product_id)
-            print(f'{id_options}')
+            print("\nThese are the available options...")
+            print(f'\n{id_options}')
             product_selection = input ('\n\nWhat product would you like to view? please only search by product Id #...  ')
             view_product(product_selection)
         elif choice == 'a':
