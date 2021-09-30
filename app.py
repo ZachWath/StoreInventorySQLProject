@@ -3,11 +3,12 @@ import datetime
 import csv
 import time
 
+
+
 def clean_price(price_str):
     split_price_str = price_str.replace('$','')
     price_float = float(split_price_str)
     return int(price_float * 100)
-
 
 
 def clean_date(date_str):
@@ -18,6 +19,19 @@ def clean_date(date_str):
     return_date = datetime.date(year, month, day)
     return return_date
 
+
+def clean_quantity(qty_input):
+    bad_input = True
+    qty_str = qty_input
+    while bad_input:
+        try:
+            quantity_int = int(qty_str)
+            bad_input = False
+        except ValueError:
+            print('''That quantity is not valid , plesae choose a whole number....
+            \nExamples = 1 , 2, 3, etc...''')
+            qty_str = input('What quantity would you like to choose?   ')
+    return quantity_int
 
 
 def add_csv():
@@ -44,81 +58,13 @@ def add_csv():
         session.commit() 
 
 
-def master_menu():
-    while True:
-        print('''
-            ***************WELCOME TO THE STORE INVENTORY MENU***************
-            \nPlease choose from the following options ..... 
-            \r
-            \rOPTIONS:
-            \rTo view a product's info in the inventory, press "v"...
-            \rTo add a new product to the inventory, press "a"...
-            \rTo create a backup of the current inventory database, press "b"...
-            \r ''')
-        possible_answers = ['v', 'a', 'b']
-        answer = input('What option would you like to do?...   ')
-        if answer.lower() in possible_answers:
-            return answer
-        else:
-            input('''That is not a valid option, please choose from the list provided...
-            \n Press ENTER to continue....''')
-
-
-def view_product(user_input):
-    id_options = []
-    for product in session.query(Product):
-        id_options.append(product.product_id)
-    try:
-        product_id = int(user_input)
-    except ValueError:
-        input ('''
-        \n!!!!!! ID ERROR !!!!!!
-        \r The Id should be in a number format
-        \r Ex: 1 
-        \r Press enter to return to menu and try again...
-        \r!!!!!!!!!!!!!!!!!!!!!!
-        ''')
-        return 
-    else:
-        if product_id in id_options:
-            chosen_product = session.query(Product).filter(Product.product_id==product_id).first()
-            print(chosen_product)
-            time.sleep(1.5)
-            input('Press Enter to return to main menu....  ')
-            return
-        else:
-            input(f'''
-            \n!!!!!! ID ERROR !!!!!!
-            \rThe ID you chose was unavailable.
-            \rPlease review the following list and try again.
-            \rOptions: {id_options}
-            \rPress enter to return to menu and try again.....  ''')
-            return 
-
-
-def clean_quantity(qty_input):
-    bad_input = True 
-    qty_str = qty_input
-    while bad_input:
-        try:
-            quantity_int = int(qty_str)
-            bad_input = False 
-        except ValueError: 
-            print('''That quantity is not valid , plesae choose a whole number....
-            \nExamples = 1 , 2, 3, etc...''')
-            qty_str = input('What quantity would you like to choose?   ')
-    return quantity_int
-
-
-
-
-
 def add_product():
-    name = input ('What is the name of the product you would like to add?   ')
+    name = input('What is the name of the product you would like to add?   ')
     quantity = clean_quantity(input(f'what is the quantity of {name}?   '))
-    price = clean_price((input (f'What is the price of {name}?   ')))
+    price = clean_price((input(f'What is the price of {name}?   ')))
     current_date = datetime.date.today()
-    new_product = Product(product_name=name, product_quantity=quantity, date_updated= current_date, product_price= price)
+    new_product = Product(product_name=name, product_quantity=quantity,
+                        date_updated=current_date, product_price=price)
     if session.query(Product).filter(Product.product_name == new_product.product_name).count() > 0:
         existing_product = session.query(Product).filter(
             Product.product_name == new_product.product_name).first()
@@ -134,8 +80,71 @@ def add_product():
         return
 
 
+def view_product(user_input):
+    id_options = []
+    for product in session.query(Product):
+        id_options.append(product.product_id)
+    try:
+        product_id = int(user_input)
+    except ValueError:
+        input('''
+        \n!!!!!! ID ERROR !!!!!!
+        \r The Id should be in a number format
+        \r Ex: 1 
+        \r Press enter to return to menu and try again...
+        \r!!!!!!!!!!!!!!!!!!!!!!
+        ''')
+        return
+    else:
+        if product_id in id_options:
+            chosen_product = session.query(Product).filter(
+                Product.product_id == product_id).first()
+            print(chosen_product)
+            time.sleep(1.5)
+            input('Press Enter to return to main menu....  ')
+            return
+        else:
+            input(f'''
+            \n!!!!!! ID ERROR !!!!!!
+            \rThe ID you chose was unavailable.
+            \rPlease review the following list and try again.
+            \rOptions: {id_options}
+            \rPress enter to return to menu and try again.....  ''')
+            return
 
 
+def backup():
+    with open('inventory_backup.csv', 'w', newline='') as backup_file:
+        data_list = []
+        for product in session.query(Product):
+            data_list.append(
+                [product.product_name, f'${product.product_price/100}', product.product_quantity, product.date_updated])
+        writer = csv.writer(backup_file)
+        writer.writerow(['product_name', 'product_price',
+                        'product_quantity', 'date_updated'])
+        for product in data_list:
+            writer.writerow(product)
+        return
+
+
+def master_menu():
+    while True:
+        print('''
+            ***************WELCOME TO THE STORE INVENTORY MENU***************
+            \nPlease choose from the following options ..... 
+            \r
+            \rOPTIONS:
+            \rTo view a product's info in the inventory, press "v"...
+            \rTo add a new product to the inventory, press "a"...
+            \rTo create a backup of the current inventory database, press "b"...
+            \rTo EXIT the program, press "e"...  ''')
+        possible_answers = ['v', 'a', 'b','e']
+        answer = input('What option would you like to do?...   ')
+        if answer.lower() in possible_answers:
+            return answer
+        else:
+            input('''That is not a valid option, please choose from the list provided...
+            \n Press ENTER to continue....''')
 
 
 def app():
@@ -153,18 +162,24 @@ def app():
             add_product()
     #a to add a new product , if this is a duplicate , the system overwrites the most recent data
             pass
-
         elif choice == 'b':
-
+            backup()
     #b for backing up the database , writted to a new csv file , should contain a single header line with
     #   the proper fields 
             pass
-        else:
+        elif choice == 'e':
+            print ("\nThank you for using this progam!")
+            print ("\nThe program will close in...")
+            time.sleep(1.25)
+            print("3...")
+            time.sleep(1.25)
+            print("2...")
+            time.sleep(1.25)
+            print("1...")
+            time.sleep(1.25)
+            print("NOW")
             app_running = False
     #all user entries should be validated (check agains an options list)
-
-
-
 
 
 
