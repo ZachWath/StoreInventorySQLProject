@@ -160,12 +160,9 @@ def app():
             view_product(product_selection)
         elif choice == 'a':
             add_product()
-    #a to add a new product , if this is a duplicate , the system overwrites the most recent data
             pass
         elif choice == 'b':
             backup()
-    #b for backing up the database , writted to a new csv file , should contain a single header line with
-    #   the proper fields 
             pass
         elif choice == 'e':
             print ("\nThank you for using this progam!")
@@ -179,7 +176,6 @@ def app():
             time.sleep(1.25)
             print("NOW")
             app_running = False
-    #all user entries should be validated (check agains an options list)
 
 
 
