@@ -117,7 +117,7 @@ def view_product(user_input):
 
 
 def backup():
-    with open('inventory_backup.csv', 'w', newline='') as backup_file:
+    with open('backup.csv', 'w', newline='') as backup_file:
         data_list = []
         for product in session.query(Product):
             data_list.append(
@@ -167,7 +167,7 @@ def app():
             pass
         elif choice == 'b':
             backup()
-            print("\n\nYou have successfully created a backup titled 'inventory_backup.csv'!!!\n\n")
+            print("\n\nYou have successfully created a backup titled 'backup.csv'!!!\n\n")
             time.sleep(1.5)
             input("Please press ENTER to return to the main menu...\n~~~")
             pass
