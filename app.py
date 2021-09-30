@@ -94,10 +94,28 @@ def view_product(user_input):
             \rOptions: {id_options}
             \rPress enter to return to menu and try again.....  ''')
             return 
-            
+
+
+def clean_quantity(qty_input):
+    bad_input = True 
+    qty_str = qty_input
+    while bad_input:
+        try:
+            quantity_int = int(qty_str)
+            bad_input = False 
+        except ValueError: 
+            print('''That quantity is not valid , plesae choose a whole number....
+            \nExamples = 1 , 2, 3, etc...''')
+            qty_str = input('What quantity would you like to choose?   ')
+    return quantity_int
+
+
+
+
+
 def add_product():
     name = input ('What is the name of the product you would like to add?   ')
-    quantity =int(input (f'what is the quantity of {name}?   '))
+    quantity = clean_quantity(input(f'what is the quantity of {name}?   '))
     price = clean_price((input (f'What is the price of {name}?   ')))
     current_date = datetime.date.today()
     new_product = Product(product_name=name, product_quantity=quantity, date_updated= current_date, product_price= price)
