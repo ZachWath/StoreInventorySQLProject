@@ -6,9 +6,19 @@ import time
 
 
 def clean_price(price_str):
-    split_price_str = price_str.replace('$','')
-    price_float = float(split_price_str)
-    return int(price_float * 100)
+    bad_str = True
+    while bad_str:    
+        try:
+            split_price_str = price_str.replace('$','')
+            price_float = float(split_price_str)
+            cleaned_price = int(price_float * 100)
+            bad_str = False
+            return cleaned_price
+        except ValueError:
+            input('''\n\nThe price you gave is not a valid number, please enter only numbers with not extra characters...
+            \rPress enter to try again....''')
+            price_str = input ('What is the price of the item you wish to add?\n~~~  ')
+            
 
 
 def clean_date(date_str):
